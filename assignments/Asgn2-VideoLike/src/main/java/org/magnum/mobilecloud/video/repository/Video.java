@@ -1,5 +1,14 @@
 package org.magnum.mobilecloud.video.repository;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.google.common.base.Objects;
 
 /**
@@ -16,6 +25,7 @@ import com.google.common.base.Objects;
  * 
  * @author mitchell
  */
+@Entity
 public class Video {
 
 	private long id;
@@ -24,6 +34,7 @@ public class Video {
 	private String url;
 	private long duration;
 	private long likes;
+	private Set<String> videoLikers = new HashSet<String>();
 	
 	public Video() {
 	}
@@ -34,6 +45,16 @@ public class Video {
 		this.url = url;
 		this.duration = duration;
 		this.likes = likes;
+	}
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -60,20 +81,39 @@ public class Video {
 		this.duration = duration;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public long getLikes() {
 		return likes;
 	}
 	
 	public void setLikes(long likes) {
 		this.likes = likes;
+	}
+
+	@ElementCollection
+	public Set<String> getVideoLikers() {
+		return videoLikers;
+	}
+
+	public void setVideoLikers(Set<String> theVideoLikers) {
+		this.videoLikers = theVideoLikers;
+	}
+	
+	public boolean addLiker(String userName) {
+		return (!this.videoLikers.contains(userName) && this.videoLikers.add(userName) && this.incrementLikes());
+	}
+	
+	public boolean removeLiker(String userName) {
+		return (this.videoLikers.contains(userName) && this.videoLikers.remove(userName) && this.decrementLikes());
+	}
+	
+	private boolean incrementLikes() {
+		this.likes++;
+		return true;
+	}
+	
+	private boolean decrementLikes() {
+		this.likes--;
+		return true;
 	}
 	
 	/**

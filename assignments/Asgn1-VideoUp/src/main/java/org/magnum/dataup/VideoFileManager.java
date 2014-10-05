@@ -64,7 +64,7 @@ public class VideoFileManager {
 	private Path getVideoPath(Video v){
 		assert(v != null);
 		
-		return targetDir_.resolve("video"+v.getId()+".mpg");
+		return targetDir_.resolve("video"+v.getId()+".mp4");
 	}
 	
 	/**
